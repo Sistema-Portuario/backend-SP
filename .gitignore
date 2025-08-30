@@ -1,0 +1,21 @@
+# Arquivo de variáveis de ambiente
+.env
+
+# Arquivos de cache e compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Pasta do ambiente virtual
+venv/
+env/
+.venv/
+
+# Arquivos de IDE e sistema operacional
+.vscode/
+.idea/
+.DS_Store
