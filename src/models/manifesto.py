@@ -14,7 +14,7 @@ class ManifestoCarga(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-    navio = relationship("Navio")
+    navio = relationship("Navio", back_populates="manifesto")
     origem = relationship("Localidade", foreign_keys=[origem_id])
     destino = relationship("Localidade", foreign_keys=[destino_id])
     containeres = relationship("Container", back_populates="manifesto")

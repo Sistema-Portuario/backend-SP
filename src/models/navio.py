@@ -2,6 +2,7 @@ import uuid
 from sqlalchemy import Column, String, Integer, func, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from src.models.base_model import Base
+from sqlalchemy.orm import relationship
 
 class Navio(Base):
     __tablename__ = 'navios'
@@ -12,3 +13,4 @@ class Navio(Base):
     tipo = Column(String)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
+    manifestos = relationship("ManifestoCarga", back_populates="navio")
