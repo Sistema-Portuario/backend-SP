@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 
-# Configurações de segurança
+# Configurações de segurança 
 SECRET_KEY = "sua_chave_supersecreta"  # coloque no .env
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30

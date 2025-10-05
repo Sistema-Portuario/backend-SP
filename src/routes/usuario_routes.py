@@ -14,7 +14,7 @@ router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/usuarios/login")
 
-# CREATE
+# CREATE 
 @router.post("/")
 def criar(nome: str, senha: str, cargo_id: uuid.UUID, db: Session = Depends(get_db)):
     return criar_usuario(db, nome, senha, cargo_id)
