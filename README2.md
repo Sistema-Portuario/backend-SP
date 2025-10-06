@@ -5,79 +5,199 @@ Este é o repositório do backend para o sistema de gerenciamento portuário. O 
 ## Pré-requisitos
 
 Antes de começar, garanta que você tenha os seguintes softwares instalados em sua máquina:
-- **Python** (versão 3.8 ou superior)
-- **PostgreSQL** (versão 14 ou superior)
-- **Git**
+
+* **Python** (versão 3.8 ou superior)
+* **PostgreSQL** (versão 14 ou superior)
+* **Git**
+
+---
 
 ## 🚀 Como Rodar o Projeto
 
 Siga os passos abaixo para configurar o ambiente de desenvolvimento localmente.
 
 ### 1. Clonar o Repositório
+
 ```bash
 git clone <URL_DO_SEU_REPOSITORIO>
 cd gerenciador-portuario
 ```
 
 ### 2. Criar e Ativar um Ambiente Virtual
-É altamente recomendado usar um ambiente virtual para isolar as dependências do projeto.
+
 ```bash
-# Criar o ambiente virtual
 python -m venv venv
-
-# Ativar no Windows
-.\venv\Scripts\activate
-
-# Ativar no Linux/macOS
-source venv/bin/activate
+source venv/bin/activate  # Linux/macOS
+.\venv\Scripts\activate   # Windows
 ```
 
 ### 3. Instalar as Dependências
-Com o ambiente virtual ativado, instale todas as bibliotecas necessárias.
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 4. Configurar o Banco de Dados PostgreSQL
-Você precisa ter um servidor PostgreSQL rodando e criar um banco de dados para a aplicação.
 
-1.  Abra o pgAdmin ou use o terminal (`psql`).
-2.  Crie um novo banco de dados. O nome padrão utilizado no projeto é `sistema_portuario`.
-    ```sql
-    CREATE DATABASE sistema_portuario;
-    ```
-3.  Certifique-se de que você tem um usuário e senha com permissão para acessar este banco.
+1. Crie o banco:
+
+   ```sql
+   CREATE DATABASE sistema_portuario;
+   ```
+2. Garanta que o usuário e senha tenham acesso ao banco.
 
 ### 5. Configurar as Variáveis de Ambiente
-O projeto usa um arquivo `.env` para guardar as credenciais do banco de dados.
 
-1.  Copie o arquivo de exemplo `.env.example` para um novo arquivo chamado `.env`.
-    ```bash
-    # No Windows (prompt de comando)
-    copy .env.example .env
+Copie o arquivo `.env.example` para `.env` e edite com suas credenciais:
 
-    # No Linux/macOS
-    cp .env.example .env
-    ```
-2.  Abra o arquivo `.env` e substitua os valores pelas suas credenciais do PostgreSQL.
+```
+DB_USER=seu_usuario_postgres
+DB_PASSWORD=sua_senha_secreta
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=sistema_portuario
+SECRET_KEY=sua_chave_supersecreta
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
 
-    ```
-    DB_USER=seu_usuario_postgres
-    DB_PASSWORD=sua_senha_secreta
-    DB_HOST=localhost
-    DB_PORT=5432
-    DB_NAME=sistema_portuario
-    ```
-
-### 6. Criar as Tabelas no Banco
-O último passo é executar o script que cria toda a estrutura de tabelas no banco de dados que você configurou.
+### 6. Criar as Tabelas
 
 ```bash
 python create_tables.py
 ```
 
-Após a execução, você deverá ver a mensagem "Tabelas criadas com sucesso!" e poderá verificar as tabelas no seu pgAdmin.
+---
+
+##  Como Testar os Endpoints da API
+
+Após configurar o ambiente, siga os passos abaixo para testar o módulo de usuários.
+
+### 1. Iniciar o Servidor
+
+```bash
+uvicorn src.main:app --reload
+```
+
+A aplicação rodará em:
+
+```
+http://127.0.0.1:8000
+```
+
+### ⚠️ Observação Importante
+
+> Todas as rotas de criação, atualização e deleção **recebem os dados via parâmetros de query**, e **não em JSON**.
+> Exemplo:
+> `POST /usuarios/?nome=bruno&senha=1234&cargo_id=...`
 
 ---
 
-Pronto! O ambiente está configurado e o banco de dados está pronto para receber as chamadas da API.
+### 2. Criar um Cargo
+
+Você pode criar um cargo via terminal Python ou rota dedicada.
+
+```bash
+python scripts/create_demo_cargo.py
+```
+
+Guarde o `id` retornado para associar a um usuário.
+
+---
+
+### 3. Criar um Usuário
+
+**Método:** `POST /usuarios/`
+**Parâmetros (query):**
+
+* `nome`: string
+* `senha`: string
+* `cargo_id`: UUID
+
+Exemplo:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/usuarios/?nome=bruno&senha=1234&cargo_id=<ID_DO_CARGO>"
+```
+
+---
+
+### 4. Listar Usuários
+
+**Método:** `GET /usuarios/`
+
+```bash
+curl http://127.0.0.1:8000/usuarios/
+```
+
+---
+
+### 5. Buscar Usuário por ID
+
+**Método:** `GET /usuarios/{usuario_id}`
+
+```bash
+curl http://127.0.0.1:8000/usuarios/<ID_DO_USUARIO>
+```
+
+---
+
+### 6. Atualizar Usuário
+
+**Método:** `PUT /usuarios/{usuario_id}`
+**Parâmetros (query):** `nome`, `senha`, `cargo_id` (opcionais)
+
+```bash
+curl -X PUT "http://127.0.0.1:8000/usuarios/<ID_DO_USUARIO>?nome=novoNome&senha=novaSenha"
+```
+
+---
+
+### 7. Deletar Usuário
+
+**Método:** `DELETE /usuarios/{usuario_id}`
+
+```bash
+curl -X DELETE "http://127.0.0.1:8000/usuarios/<ID_DO_USUARIO>"
+```
+
+---
+
+### 8. Fazer Login
+
+**Método:** `POST /usuarios/login`
+**Envia dados via formulário (`OAuth2PasswordRequestForm`):**
+
+```bash
+curl -X POST -F "username=bruno" -F "password=1234" http://127.0.0.1:8000/usuarios/login
+```
+
+**Resposta esperada:**
+
+```json
+{
+  "access_token": "<TOKEN_JWT>",
+  "token_type": "bearer"
+}
+```
+
+---
+
+### 9. Acessar Rota Protegida
+
+**Método:** `GET /usuarios/me`
+Use o token JWT retornado no login:
+
+```bash
+TOKEN=<TOKEN_JWT>
+curl -H "Authorization: Bearer $TOKEN" http://127.0.0.1:8000/usuarios/me
+```
+
+**Resposta:**
+
+```json
+{
+  "id": "UUID_DO_USUARIO",
+  "nome": "bruno"
+}
+```
+
