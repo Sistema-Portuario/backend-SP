@@ -24,6 +24,26 @@ def criar(nome: str, senha: str, cargo_id: uuid.UUID, db: Session = Depends(get_
 def listar(db: Session = Depends(get_db)):
     return listar_usuarios(db)
 
+# LOGIN
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    usuario = autenticar_usuario(db, form_data.username, form_data.password)
+    if not usuario:
+        raise HTTPException(status_code=401, detail="Credenciais inválidas")
+    token = criar_token(str(usuario.id))
+    return {"access_token": token, "token_type": "bearer"}
+
+# ROTA PROTEGIDA
+@router.get("/me")
+def perfil(token: str = Security(oauth2_scheme), db: Session = Depends(get_db)):
+    usuario_id = validar_token(token)
+    if not usuario_id:
+        raise HTTPException(status_code=401, detail="Token inválido ou expirado")
+    usuario = buscar_usuario_por_id(db, usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return {"id": usuario.id, "nome": usuario.nome}
+    
 @router.get("/{usuario_id}")
 def buscar(usuario_id: uuid.UUID, db: Session = Depends(get_db)):
     usuario = buscar_usuario_por_id(db, usuario_id)
@@ -47,22 +67,4 @@ def deletar(usuario_id: uuid.UUID, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return {"detail": "Usuário deletado"}
 
-# LOGIN
-@router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    usuario = autenticar_usuario(db, form_data.username, form_data.password)
-    if not usuario:
-        raise HTTPException(status_code=401, detail="Credenciais inválidas")
-    token = criar_token(str(usuario.id))
-    return {"access_token": token, "token_type": "bearer"}
 
-# ROTA PROTEGIDA
-@router.get("/me")
-def perfil(token: str = Security(oauth2_scheme), db: Session = Depends(get_db)):
-    usuario_id = validar_token(token)
-    if not usuario_id:
-        raise HTTPException(status_code=401, detail="Token inválido ou expirado")
-    usuario = buscar_usuario_por_id(db, usuario_id)
-    if not usuario:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return {"id": usuario.id, "nome": usuario.nome}

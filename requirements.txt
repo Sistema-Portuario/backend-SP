@@ -1,6 +1,5 @@
 annotated-types==0.7.0
 anyio==4.10.0
-bcrypt==5.0.0
 cffi==2.0.0
 click==8.2.1
 cryptography==46.0.1
@@ -26,3 +25,4 @@ starlette==0.47.3
 typing-inspection==0.4.1
 typing_extensions==4.15.0
 uvicorn==0.35.0
+bcrypt==3.2.2
