@@ -13,4 +13,4 @@ class Navio(Base):
     tipo = Column(String)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
-    manifestos = relationship("ManifestoCarga", back_populates="navio")
+    manifesto = relationship("ManifestoCarga", back_populates="navio")
