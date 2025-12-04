@@ -66,6 +66,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 python create_tables.py
 ```
 
+### 7. Popular as Tabelas
+  
+  cd src
+  python3 popular_banco.py  (RESETA O BD E CRIA OS DADOS NOVAMENTE)
+
+  Nota: O script gera senhas aleatórias. Para testar o login especificamente, recomenda-se criar um usuário manualmente via API ou ajustar o script para fixar uma senha conhecida.
 ---
 
 ##  Como Testar os Endpoints da API
