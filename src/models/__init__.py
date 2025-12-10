@@ -6,3 +6,5 @@ from .navio import Navio
 from .setor import Setor
 from .usuario import Usuario
 from .base_model import Base
+from .credencial import Credencial
+from .caminhao import Caminhao
