@@ -1,0 +1,12 @@
+Step,Keyword,Parameter 1,Parameter 2,Parameter 3
+1,SETUP,reset_db,,
+2,API_GET,/dashboard/kpis,,
+3,ASSERT,json_field,caminhoesAtivos,0
+4,API_POST,/caminhoes/,placa=TST-001|motorista=Tester|status=ativo,
+5,ASSERT,status_code,EQUALS,200
+6,API_GET,/dashboard/kpis,,
+7,ASSERT,json_field,caminhoesAtivos,1
+8,API_POST,/caminhoes/,placa=TST-002|motorista=Tester2|status=manutencao,
+9,ASSERT,status_code,EQUALS,200
+10,API_GET,/dashboard/kpis,,
+11,ASSERT,json_field,caminhoesAtivos,1

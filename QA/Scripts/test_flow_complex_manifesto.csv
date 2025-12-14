@@ -1,0 +1,13 @@
+Step,Keyword,Parameter 1,Parameter 2,Parameter 3
+1,SETUP,reset_db,,
+2,API_POST,/localidades/,nome=Porto Santos|cidade=Santos|pais=Brasil,
+3,EXTRACT,id,FROM_RESPONSE,loc_origem_id
+4,API_POST,/localidades/,nome=Porto Xangai|cidade=Xangai|pais=China,
+5,EXTRACT,id,FROM_RESPONSE,loc_destino_id
+6,API_POST,/navios/,nome=Maersk Line|pais=Dinamarca|capacidade=15000|tipo=Cargueiro,
+7,EXTRACT,id,FROM_RESPONSE,navio_id
+8,API_POST,/navios/{navio_id}/chegada,origem_id={loc_origem_id}|destino_id={loc_destino_id}|data_chegada=2023-12-01T10:00:00,
+9,ASSERT,status_code,EQUALS,200
+10,EXTRACT,manifesto.id,FROM_RESPONSE,manifesto_id
+11,API_POST,/containeres/,manifesto_id={manifesto_id}|modelo=40Pes|status=cheio,
+12,ASSERT,status_code,EQUALS,200

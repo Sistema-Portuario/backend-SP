@@ -1,0 +1,6 @@
+Step,Keyword,Parameter 1,Parameter 2,Parameter 3
+1,SETUP,reset_db,,
+2,LOOP,test_data_navios.csv,,
+3,API_POST,/navios/,nome={Input_Nome}|pais={Input_Pais}|capacidade={Input_Capacidade}|tipo={Input_Tipo},
+4,ASSERT,status_code,EQUALS,{Expected_Status}
+5,END_LOOP,,,

@@ -1,0 +1,6 @@
+CaseID,Description,Input_Nome,Input_Pais,Input_Capacidade,Input_Tipo,Expected_Status
+NAV01,Valid Creation,EverGiven,Panama,20000,Cargueiro,200
+NAV02,Negative Capacity (Invalid),FailShip,Brazil,-100,Cargueiro,422
+NAV03,Zero Capacity (Boundary),ZeroShip,USA,0,Tanque,200
+NAV04,SQL Injection Name,Ship'; DROP TABLE;,Unknown,5000,Cargueiro,200
+NAV05,Missing Name,,China,100,Cargueiro,422

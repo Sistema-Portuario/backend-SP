@@ -1,0 +1,6 @@
+CaseID,Description,Input_Placa,Input_Motorista,Input_Status,Expected_Code
+TRK01,Active Truck,ABC-1234,Joao Silva,ativo,200
+TRK02,Inactive Truck,XYZ-9876,Maria Souza,inativo,200
+TRK03,Maintenance Truck,MAN-5555,Jose Lima,manutencao,200
+TRK04,Invalid Enum,ERR-0000,Hacker,vendido,422
+TRK05,Missing Placa,,Ghost Driver,ativo,422

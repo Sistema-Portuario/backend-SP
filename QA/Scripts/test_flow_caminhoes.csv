@@ -1,0 +1,6 @@
+Step,Keyword,Parameter 1,Parameter 2,Parameter 3
+1,SETUP,reset_db,,
+2,LOOP,test_data_caminhoes.csv,,
+3,API_POST,/caminhoes/,placa={Input_Placa}|motorista={Input_Motorista}|status={Input_Status},
+4,ASSERT,status_code,EQUALS,{Expected_Code}
+5,END_LOOP,,,

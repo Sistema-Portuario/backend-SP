@@ -1,0 +1,11 @@
+Step,Keyword,Parameter 1,Parameter 2,Parameter 3
+1,SETUP,reset_db,,
+2,API_POST,/cargos/,nome=Gerente|descricao=Admin,
+3,EXTRACT,id,FROM_RESPONSE,cargo_id
+4,API_POST,/usuarios/,nome=admin|senha=123|cargo_id={cargo_id},
+5,ASSERT,status_code,EQUALS,200
+6,API_POST,/usuarios/login,username=admin|password=123,
+7,ASSERT,status_code,EQUALS,200
+8,EXTRACT,access_token,FROM_RESPONSE,my_token
+9,API_GET,/usuarios/me,HEADER_AUTH|my_token,
+10,ASSERT,json_field,nome,admin
